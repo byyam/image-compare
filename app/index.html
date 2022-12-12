@@ -57,6 +57,7 @@
       color: white;
     }
   </style>
+   <script src="	https://unpkg.com/axios@0.24.0/dist/axios.min.js"></script>
   </head>
 <body>
   <form>
@@ -68,12 +69,13 @@
       <p>No files currently selected for upload</p>
     </div>
     <div>
-      <button>Submit</button>
+      <button id="submit-btn">submit</button>
     </div>
   </form>
   <script>
     const input = document.querySelector('input');
     const preview = document.querySelector('.preview');
+    let curFiles;
 
     input.style.opacity = 0;
 
@@ -84,7 +86,7 @@
         preview.removeChild(preview.firstChild);
       }
 
-      const curFiles = input.files;
+     curFiles = input.files;
       if(curFiles.length === 0) {
         const para = document.createElement('p');
         para.textContent = 'No files currently selected for upload';
@@ -113,6 +115,30 @@
         }
       }
     }
+
+    document.getElementById("submit-btn").onclick = () => {
+      let fileElement = document.getElementById('image_uploads')
+
+      // check if user had selected a file
+      if (fileElement.files.length === 0) {
+        alert('please choose some files')
+        return
+      }
+
+      let files = Array.from(fileElement.files)
+
+      let formData = new FormData();
+      files.forEach(file => {
+        formData.append('file', file);
+      })
+      
+      axios.post("/upload-multiple-files", formData)
+        .then(res => {
+          console.log(res.data)
+          console.log(res.data.url)
+        })
+    }
+
 
 // https://developer.mozilla.org/en-US/docs/Web/Media/Formats/Image_types
     const fileTypes = [
