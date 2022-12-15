@@ -1,4 +1,4 @@
-package vipsprocess
+package processcli
 
 import (
 	"log"
