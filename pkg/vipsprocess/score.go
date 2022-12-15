@@ -75,24 +75,24 @@ func GetPsnr(opt *ProcessCtx) {
 	outline := strings.TrimSpace(string(out))
 	reg := regexp.MustCompile(`average:\d+\.\d+`)
 	if reg == nil {
-		logger.Warnf("reg ssim failed:[%s]", outline)
+		logger.Warnf("reg psnr failed:[%s]", outline)
 		return
 	}
 	results := reg.FindAllString(outline, -1)
 	if len(results) == 0 {
-		logger.Warnf("get ssim failed:[%s]%+v", outline, results)
+		logger.Warnf("get psnr failed:[%s]%+v", outline, results)
 		return
 	}
 	logger.Debugf("results:%+v", results[0])
 	scores := strings.Split(results[0], ":")
 	if len(scores) != 2 {
-		logger.Warnf("get ssim failed:[%s]", outline)
+		logger.Warnf("get psnr failed:[%s]", outline)
 		return
 	}
 	if s, err := strconv.ParseFloat(scores[1], 64); err == nil {
 		opt.PSNR = s
 	} else {
-		logger.Warnf("get ssim float failed:[%s][%v]", outline, err)
+		logger.Warnf("get psnr float failed:[%s][%v]", outline, err)
 	}
 	logger.Debugf("exec[%s] done", cmd)
 }
