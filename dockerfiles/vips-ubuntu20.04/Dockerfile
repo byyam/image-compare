@@ -9,8 +9,7 @@ RUN apt-get update \
 		python3-pip \
 		bc \
 		wget \
-		vim git \
-	&& rm -rf /var/lib/apt/lists/*
+		vim git
 
 # we need meson for libvips build
 RUN pip3 install meson
@@ -20,7 +19,7 @@ RUN add-apt-repository ppa:lovell/cgif \
 	&& apt-get update \
 	&& apt-get install -y libcgif-dev
 
-# ubuntu20.04 install avif need version > 1.7
+# AVIF&HEIC avif need version > 1.7
 RUN add-apt-repository ppa:strukturag/libde265 \
 	&& add-apt-repository ppa:strukturag/libheif \
 	&& apt-get update \
@@ -35,10 +34,32 @@ RUN apt-get install -y \
 	librsvg2-dev \
 	libpng-dev \
 	libjpeg-turbo8-dev \
-	libtiff-dev \
+	libtiff5-dev \
 	libexif-dev \
 	liblcms2-dev \
-	liborc-dev
+	liborc-dev \
+	libgsf-1-dev \
+	fftw3-dev
+
+# install webp
+ARG WEBP_VERSION=1.2.4
+RUN wget -P /tmp https://github.com/webmproject/libwebp/archive/refs/tags/v${WEBP_VERSION}.tar.gz
+RUN cd /tmp; tar -xvf v${WEBP_VERSION}.tar.gz
+RUN apt-get install -y gcc make autoconf automake libtool
+
+RUN cd /tmp/libwebp-${WEBP_VERSION}/; ./autogen.sh; ./configure \
+--prefix=/usr/local \
+--enable-libwebpmux \
+--enable-libwebpdemux \
+--enable-libwebpdecoder \
+--enable-libwebpextras \
+--enable-static
+
+RUN cd /tmp/libwebp-${WEBP_VERSION}/; make; make install
+
+RUN rm "/tmp/v${WEBP_VERSION}.tar.gz"
+RUN rm -rf /var/lib/apt/lists/*
+
 
 WORKDIR /usr/local/src
 
@@ -67,9 +88,10 @@ RUN pip3 install pyvips
 ENV LD_LIBRARY_PATH $LD_LIBRARY_PATH:/usr/local/lib
 
 # install golang
-RUN wget -P /tmp "https://dl.google.com/go/go1.16.15.linux-amd64.tar.gz"
-RUN tar -C /usr/local -xzf "/tmp/go1.16.15.linux-amd64.tar.gz"
-RUN rm "/tmp/go1.16.15.linux-amd64.tar.gz"
+ARG GO_VERSION=1.16.15
+RUN wget -P /tmp "https://dl.google.com/go/go${GO_VERSION}.linux-amd64.tar.gz"
+RUN tar -C /usr/local -xzf "/tmp/go${GO_VERSION}.linux-amd64.tar.gz"
+RUN rm "/tmp/go${GO_VERSION}.linux-amd64.tar.gz"
 
 ENV GOPATH /go
 ENV PATH $GOPATH/bin:/usr/local/go/bin:$PATH
