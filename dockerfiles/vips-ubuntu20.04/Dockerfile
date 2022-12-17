@@ -8,7 +8,9 @@ RUN apt-get update \
 		ninja-build \
 		python3-pip \
 		bc \
-		wget
+		wget \
+		vim git \
+	&& rm -rf /var/lib/apt/lists/*
 
 # we need meson for libvips build
 RUN pip3 install meson
@@ -61,3 +63,16 @@ RUN cd libvips-${VIPS_BRANCH} \
 # pyvips .. handy for testing
 RUN pip3 install pyvips
 
+# env vips.so
+ENV LD_LIBRARY_PATH $LD_LIBRARY_PATH:/usr/local/lib
+
+# install golang
+RUN wget -P /tmp "https://dl.google.com/go/go1.16.15.linux-amd64.tar.gz"
+RUN tar -C /usr/local -xzf "/tmp/go1.16.15.linux-amd64.tar.gz"
+RUN rm "/tmp/go1.16.15.linux-amd64.tar.gz"
+
+ENV GOPATH /go
+ENV PATH $GOPATH/bin:/usr/local/go/bin:$PATH
+RUN mkdir -p "$GOPATH/src" "$GOPATH/bin" && chmod -R 777 "$GOPATH"
+
+WORKDIR $GOPATH
