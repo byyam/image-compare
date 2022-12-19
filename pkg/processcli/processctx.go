@@ -12,6 +12,18 @@ const (
 	FormatAvif
 )
 
+func (p FormatType) String() string {
+	switch p {
+	case FormatWebp:
+		return "webp"
+	case FormatHeif:
+		return "heif"
+	case FormatAvif:
+		return "avif"
+	}
+	return ""
+}
+
 type ProcessCtx struct {
 	TargetFormat FormatType
 	Quality      int

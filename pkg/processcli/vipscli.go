@@ -12,12 +12,9 @@ import (
 
 func getSuffix(opt *ProcessCtx) (string, error) {
 	switch opt.TargetFormat {
-	case FormatWebp:
-		return ".webp", nil
-	case FormatHeif:
-		return ".heif", nil
-	case FormatAvif:
-		return ".avif", nil
+	case FormatWebp, FormatHeif, FormatAvif:
+		return "." + opt.TargetFormat.String(), nil
+
 	default:
 		logger.Errorf("unsupported format:%d", opt.TargetFormat)
 	}
