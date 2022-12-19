@@ -4,8 +4,6 @@ import (
 	"errors"
 	"fmt"
 	"os/exec"
-	"path"
-	"strings"
 
 	"github.com/byyam/image-compare/pkg/logger"
 )
@@ -27,8 +25,7 @@ func handleOutput(opt *ProcessCtx) error {
 		if err != nil {
 			return err
 		}
-		fileSuffix := path.Ext(opt.Input)
-		filenameOnly := strings.TrimSuffix(opt.Input, fileSuffix)
+		filenameOnly, _ := GetFilePathAndSuffix(opt.Input)
 		opt.Output = filenameOnly + suffix
 	}
 	return nil
