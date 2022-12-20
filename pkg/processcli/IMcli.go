@@ -28,7 +28,7 @@ func GetDSsimIM(opt *ProcessCtx) {
 }
 
 func GetMetric(opt *ProcessCtx, metric string) (value float64) {
-	cmd := fmt.Sprintf("magick compare -metric %s %s %s /dev/null  2>&1 | awk -F ' ' '{print $1}'", metric, opt.Input, opt.Output)
+	cmd := fmt.Sprintf("magick compare -metric %s %s %s /dev/null  2>&1 | grep -oE '^\\d+\\.\\d+'", metric, opt.Input, opt.Output)
 	out, err := exec.Command("bash", "-c", cmd).Output()
 	if err != nil {
 		logger.Warnf("exec[%s] failed:%v", cmd, err)
