@@ -38,6 +38,7 @@ type ProcessCtx struct {
 	// result context
 	OutputFileInfo os.FileInfo
 	SSIM           float64
+	DSSIM          float64
 	PSNR           float64
 	VMAF           float64
 }
@@ -63,10 +64,13 @@ func Process(ctx *ProcessCtx, options ...Option) error {
 		GetVMAF(ctx)
 	}
 	if opts.EnableSSIM {
-		GetSsim(ctx)
+		GetSsimIM(ctx)
+	}
+	if opts.EnableDSSIM {
+		GetDSsimIM(ctx)
 	}
 	if opts.EnablePSNR {
-		GetPsnr(ctx)
+		GetPsnrIM(ctx)
 	}
 	return nil
 }
@@ -81,9 +85,10 @@ func GetFileInfo(ctx *ProcessCtx) error {
 }
 
 type Opts struct {
-	EnableSSIM bool
-	EnablePSNR bool
-	EnableVMAF bool
+	EnableSSIM  bool
+	EnableDSSIM bool
+	EnablePSNR  bool
+	EnableVMAF  bool
 }
 
 type Option func(opts *Opts)
@@ -91,6 +96,12 @@ type Option func(opts *Opts)
 func WithSSIM(v bool) Option {
 	return func(opts *Opts) {
 		opts.EnableSSIM = v
+	}
+}
+
+func WithDSSIM(v bool) Option {
+	return func(opts *Opts) {
+		opts.EnableDSSIM = v
 	}
 }
 
