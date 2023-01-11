@@ -26,6 +26,7 @@ func Test_SaveAvif(t *testing.T) {
 		if err := SaveImage(&ProcessCtx{
 			TargetFormat: FormatAvif,
 			Quality:      convertQuality,
+			Effort:       4,
 			Input:        "/go/src/bimg/testdata/test.jpg",
 		}); err != nil {
 			t.Fatalf("save image failed:%v", err)

@@ -35,6 +35,8 @@ type ProcessCtx struct {
 	Quality      int
 	Input        string
 	Output       string
+	// avif
+	Effort int // set 0 use vips default
 	// result context
 	OutputFileInfo os.FileInfo
 	SSIM           float64

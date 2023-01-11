@@ -52,7 +52,11 @@ func handleByFormat(opt *ProcessCtx) (string, error) {
 	case FormatHeif:
 		return fmt.Sprintf("vips heifsave -Q %d %s %s", opt.Quality, opt.Input, opt.Output), nil
 	case FormatAvif:
-		return fmt.Sprintf("vips heifsave -Q %d %s %s", opt.Quality, opt.Input, opt.Output), nil
+		if opt.Effort == 0 {
+			return fmt.Sprintf("vips heifsave -Q %d %s %s", opt.Quality, opt.Input, opt.Output), nil
+		} else {
+			return fmt.Sprintf("vips heifsave --effort %d -Q %d %s %s", opt.Effort, opt.Quality, opt.Input, opt.Output), nil
+		}
 	default:
 		logger.Errorf("unsupported format:%d", opt.TargetFormat)
 	}
